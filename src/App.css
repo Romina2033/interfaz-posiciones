@@ -1,42 +1,81 @@
-#root {
-  max-width: 1280px;
+/* TODO EL DISEÑO EN UN SOLO LUGAR: App.css */
+body {
+  margin: 0;
+  background-color: #f4f7f9; /* Fondo gris claro profesional */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app-container {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 40px 20px;
+}
+
+.titulo-pagina {
+  text-align: center;
+  color: #1a202c;
+  margin-bottom: 30px;
+}
+
+/* LA GRILLA (para que no se vea estirado) */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* DISEÑO DE LA TARJETA (JobCard) */
+.job-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.job-card h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+  color: #2d3748;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #4a5568;
+}
+
+.input-repo {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #edf2f7;
+  border-radius: 6px;
+  box-sizing: border-box; /* Evita que se salga de la tarjeta */
+}
+
+.btn-postular {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #3182ce;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-postular:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.mensaje {
+  margin-top: 10px;
+  font-size: 0.85rem;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+.error { color: #e53e3e; }
+.success { color: #38a169; }
