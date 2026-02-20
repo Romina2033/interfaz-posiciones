@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net";
-const email = "jane.doe@example.com";
+const email = "rogonzalez2033@gmail.com";
 
 function App() {
   const [candidate, setCandidate] = useState(null);
@@ -12,23 +12,23 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener candidato
+        
         const candidateRes = await fetch(
           `${BASE_URL}/api/candidate/get-by-email?email=${email}`
         );
 
         if (!candidateRes.ok) {
-          throw new Error("No se pudo obtener el candidato");
+          throw new Error("Error obteniendo candidato");
         }
 
         const candidateData = await candidateRes.json();
         setCandidate(candidateData);
 
-        // Obtener lista de jobs
+        
         const jobsRes = await fetch(`${BASE_URL}/api/jobs/get-list`);
 
         if (!jobsRes.ok) {
-          throw new Error("No se pudieron obtener las posiciones");
+          throw new Error("Error obteniendo posiciones");
         }
 
         const jobsData = await jobsRes.json();
@@ -52,7 +52,7 @@ function App() {
       <h1>Posiciones abiertas</h1>
 
       {jobs.map((job) => (
-        <div key={job.id}>
+        <div key={job.id} style={{ marginBottom: "1rem" }}>
           <h3>{job.title}</h3>
         </div>
       ))}
