@@ -1,36 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-const email = "rogonzalez2033@gmail.com";
+import { useEffect, useState } from "react";
+
+const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net";
+const email = "jane.doe@example.com";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [candidate, setCandidate] = useState(null);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener candidato
+        const candidateRes = await fetch(
+          `${BASE_URL}/api/candidate/get-by-email?email=${email}`
+        );
+
+        if (!candidateRes.ok) {
+          throw new Error("No se pudo obtener el candidato");
+        }
+
+        const candidateData = await candidateRes.json();
+        setCandidate(candidateData);
+
+        // Obtener lista de jobs
+        const jobsRes = await fetch(`${BASE_URL}/api/jobs/get-list`);
+
+        if (!jobsRes.ok) {
+          throw new Error("No se pudieron obtener las posiciones");
+        }
+
+        const jobsData = await jobsRes.json();
+        setJobs(jobsData);
+
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "2rem" }}>
+      <h1>Posiciones abiertas</h1>
+
+      {jobs.map((job) => (
+        <div key={job.id}>
+          <h3>{job.title}</h3>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default App
+export default App;
