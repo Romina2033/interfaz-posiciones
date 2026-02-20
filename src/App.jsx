@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import JobCard from "./components/JobCard";
 
 const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net";
 const email = "rogonzalez2033@gmail.com";
@@ -52,10 +53,8 @@ function App() {
       <h1>Posiciones abiertas</h1>
 
       {jobs.map((job) => (
-        <div key={job.id} style={{ marginBottom: "1rem" }}>
-          <h3>{job.title}</h3>
-        </div>
-      ))}
+  <JobCard key={job.id} job={job} />
+))}
     </div>
   );
 }
