@@ -9,58 +9,51 @@ function App() {
   const [candidate, setCandidate] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const candidateRes = await fetch(`${BASE_URL}/api/candidate/get-by-email?email=${email}`);
-        if (!candidateRes.ok) throw new Error("Error obteniendo candidato");
-        const candidateData = await candidateRes.json();
-        setCandidate(candidateData);
+        const [candidateRes, jobsRes] = await Promise.all([
+          fetch(`${BASE_URL}/api/candidate/get-by-email?email=${email}`),
+          fetch(`${BASE_URL}/api/jobs/get-list`)
+        ]);
 
-        const jobsRes = await fetch(`${BASE_URL}/api/jobs/get-list`);
-        if (!jobsRes.ok) throw new Error("Error obteniendo posiciones");
+        const candidateData = await candidateRes.json();
         const jobsData = await jobsRes.json();
+        
+        setCandidate(candidateData);
         setJobs(jobsData);
       } catch (err) {
-        setError(err.message);
+        console.error("Error cargando datos:", err);
       } finally {
-        setLoading(false);
+        // Un pequeño retraso para que la transición del skeleton sea suave
+        setTimeout(() => setLoading(false), 800);
       }
     };
     fetchData();
   }, []);
 
-  if (loading) return <div style={centerStyle}>Cargando posiciones...</div>;
-  if (error) return <div style={centerStyle}>Error: {error}</div>;
-
   return (
     <div className="app-container">
-      <h1 className="titulo-pagina">Posiciones Abiertas</h1>
-      {/* Muestra el nombre del candidato si ya cargó */}
-      {candidate && (
-        <p style={{ textAlign: "center", color: "#666" }}>
-          Candidato: {candidate.firstName} {candidate.lastName}
-        </p>
-      )}
-      
+      <header className="header">
+        <h1>Posiciones Abiertas</h1>
+        {candidate && (
+          <p>Bienvenido, <strong>{candidate.firstName} {candidate.lastName}</strong></p>
+        )}
+      </header>
+
       <div className="jobs-grid">
-        {jobs.map((job) => (
-          <JobCard key={job.id} job={job} candidateData={candidate} />
-        ))}
+        {loading ? (
+          // Skeletons de carga (6 tarjetas)
+          [...Array(6)].map((_, i) => <div key={i} className="skeleton" />)
+        ) : (
+          jobs.map((job) => (
+            <JobCard key={job.id} job={job} candidateData={candidate} />
+          ))
+        )}
       </div>
     </div>
   );
 }
-
-const centerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100vh",
-  fontSize: "1.2rem",
-  color: "#4a5568"
-};
 
 export default App;
