@@ -1,5 +1,13 @@
-const handleSubmit = async (e) => {
+import React, { useState } from 'react';
+
+const JobCard = ({ job, candidateData }) => {
+  const [repoUrl, setRepoUrl] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!repoUrl) {
       setStatus('error');
       setMessage('⚠️ La URL es necesaria.');
@@ -28,16 +36,47 @@ const handleSubmit = async (e) => {
         setStatus('success');
         setMessage('✅ ¡Postulación enviada con éxito!');
       } else {
-      
-        const errorMsg = data.details?.fieldErrors 
+       
+        const errorDetail = data.details?.fieldErrors 
           ? Object.values(data.details.fieldErrors).flat()[0] 
           : (data.message || 'Error en los datos');
-        throw new Error(errorMsg);
+        throw new Error(errorDetail);
       }
     } catch (error) {
       setStatus('error');
       setMessage('❌ ' + error.message);
     }
   };
+
+  return (
+    <div className="job-card">
+      <span className="job-id">ID: {job.id}</span>
+      <h3>{job.title}</h3>
+      
+      <form onSubmit={handleSubmit}>
+        <label className="input-label">Repositorio de GitHub</label>
+        <input
+          className="input-repo"
+          type="url"
+          placeholder="https://github.com/tu-usuario/tu-repo"
+          value={repoUrl}
+          onChange={(e) => setRepoUrl(e.target.value)}
+          disabled={status === 'loading' || status === 'success'}
+        />
+        
+        <button 
+          type="submit" 
+          className={`btn-postular ${status === 'success' ? 'success' : ''}`}
+          disabled={status === 'loading' || status === 'success'}
+        >
+          {status === 'loading' ? 'Enviando...' : status === 'success' ? 'Postulado' : 'Enviar Postulación'}
+        </button>
+      </form>
+
+      {message && <div className={`mensaje ${status}`}>{message}</div>}
+    </div>
+  );
+};
+
 
 export default JobCard;
