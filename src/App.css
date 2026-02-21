@@ -88,9 +88,9 @@ body {
   display: block;
 }
 
-/* INPUT CORREGIDO */
+/* INPUT */
 .input-repo {
-  width: 100%; /* Ahora sí respetará el ancho */
+  width: 100%; 
   padding: 14px;
   background: #f1f5f9;
   border: 2px solid transparent;

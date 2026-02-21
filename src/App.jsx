@@ -26,7 +26,7 @@ function App() {
       } catch (err) {
         console.error("Error cargando datos:", err);
       } finally {
-        // Un pequeño retraso para que la transición del skeleton sea suave
+      
         setTimeout(() => setLoading(false), 800);
       }
     };
@@ -44,7 +44,7 @@ function App() {
 
       <div className="jobs-grid">
         {loading ? (
-          // Skeletons de carga (6 tarjetas)
+          
           [...Array(6)].map((_, i) => <div key={i} className="skeleton" />)
         ) : (
           jobs.map((job) => (
